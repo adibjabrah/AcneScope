@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcneScope - Sistem Deteksi Jerawat</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #0ea5e9; /* Light Ocean Blue */
+            --secondary-color: #14b8a6; /* Medical Teal */
+            --bg-color: #f4f7f6;
+            --text-main: #334155;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        /* Navbar & Header */
+        .custom-header {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.04);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .brand-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+        .brand-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Card Styling */
+        .glass-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 15px;
+            padding: 40px 20px;
+            text-align: center;
+            background-color: #f8fafc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: #f0f9ff;
+        }
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        .file-input-hidden {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Buttons & Badges */
+        .btn-custom {
+            background: linear-gradient(135deg, var(--primary-color), #0284c7);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
+        }
+        
+        .metric-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0;
+        }
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Image Display */
+        .result-img-container {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border: 3px solid #fff;
+        }
+        .result-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Footer */
+        .custom-footer {
+            margin-top: 3rem;
+            padding: 2rem 0;
+            border-top: 1px solid #e2e8f0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="custom-header">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="brand-title"><i class="fa-solid fa-microscope me-2"></i>AcneScope</h1>
+                <span class="brand-subtitle">Smart Decision Support System</span>
+            </div>
+            <!-- <div class="text-end d-none d-md-block">
+                <span class="brand-subtitle d-block">Politeknik Caltex Riau</span>
+                <span class="brand-subtitle d-block text-primary">Proyek Akhir Deep Learning</span>
+            </div> -->
+        </div>
+    </header>
+
+    <div class="container mb-5">
+        
+        <div class="row justify-content-center mb-4">
+            <div class="col-lg-6 col-md-8">
+                <div class="glass-card text-center">
+                    <h5 class="mb-4 fw-bold">Skrining Citra Wajah</h5>
+                    <form id="uploadForm">
+                        <div class="upload-area mb-4">
+                            <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                            <h6 id="fileNameDisplay" class="fw-bold mb-1">Pilih atau Tarik Foto Wajah ke Sini</h6>
+                            <p class="text-muted small mb-0">Mendukung format JPG, JPEG, atau PNG</p>
+                            <input class="file-input-hidden" type="file" id="fileInput" accept="image/png, image/jpeg" required>
+                        </div>
+                        <button type="submit" class="btn btn-custom w-100"></i>Mulai Analisis</button>
+                    </form>
+
+                    <div id="loading" class="mt-4" style="display: none;">
+                        <div class="spinner-border text-info" role="status" style="width: 3rem; height: 3rem;"></div>
+                        <p class="mt-3 fw-medium text-info">Mengekstraksi fitur wajah & mendeteksi lesi...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="resultArea" class="row justify-content-center" style="display: none;">
+            
+            <div class="col-lg-5 mb-4">
+                <div class="glass-card h-100">
+                    <h5 class="mb-4 fw-bold border-bottom pb-2"><i class="fa-regular fa-image me-2"></i>Visualisasi Deteksi</h5>
+                    <div class="result-img-container">
+                        <img id="outputImage" class="result-img" src="" alt="Hasil Deteksi Model">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7 mb-4">
+                <div class="glass-card h-100">
+                    <h5 class="mb-4 fw-bold border-bottom pb-2"><i class="fa-solid fa-chart-pie me-2"></i>Hasil Analisis Kulit</h5>
+                    
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <div class="metric-box">
+                                <p class="metric-label">Total Jerawat Terdeteksi</p>
+                                <h3 id="resTotal" class="metric-value">0</h3>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="metric-box">
+                                <p class="metric-label">Status Keparahan</p>
+                                <h3 id="resStatus" class="metric-value fs-5 mt-2 px-2 py-1 rounded">Aman</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info rounded-3 mb-4" style="background-color: #f0f9ff; border-left: 5px solid var(--primary-color); border-right: none; border-top: none; border-bottom: none;">
+                        <h6 class="fw-bold mb-1"><i class="fa-solid fa-user-doctor me-2"></i>Saran Penanganan:</h6>
+                        <span id="resSaran" class="small"></span>
+                    </div>
+
+                    <h6 class="fw-bold mb-3 text-center">Distribusi Jerawat Berdasarkan Zona Wajah</h6>
+                    <div style="height: 220px; width: 100%;">
+                        <canvas id="zonaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="custom-footer text-center">
+        <div class="container">
+            <p class="mb-1 fw-medium">Sistem Informasi Deteksi Jerawat Berbasis Deep Learning (YOLOv8)</p>
+            <!-- <p class="mb-0">Dikembangkan oleh <strong>Kelompok 5</strong> | Program Studi Teknik Informatika</p> -->
+        </div>
+    </footer>
+
+    <script>
+        let chartInstance = null;
+
+        // Script untuk mengubah teks area unggah saat file dipilih
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : "Pilih atau Tarik Foto Wajah ke Sini";
+            document.getElementById('fileNameDisplay').innerText = fileName;
+            document.getElementById('fileNameDisplay').classList.add('text-primary');
+        });
+
+        // Script proses pengiriman ke backend
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('fileInput');
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('resultArea').style.display = 'none';
+
+            try {
+                const response = await fetch('/predict', { method: 'POST', body: formData });
+                const data = await response.json();
+
+                if(data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                // Tampilkan gambar dan total
+                document.getElementById('outputImage').src = 'data:image/jpeg;base64,' + data.image;
+                document.getElementById('resTotal').innerText = data.total;
+                
+                // Styling status badge secara dinamis
+                const statusBox = document.getElementById('resStatus');
+                statusBox.innerText = data.status;
+                if(data.status === "AMAN") {
+                    statusBox.style.color = "#059669"; // Hijau
+                    statusBox.style.backgroundColor = "#d1fae5";
+                } else if(data.status === "PERLU PERHATIAN") {
+                    statusBox.style.color = "#d97706"; // Kuning/Oranye
+                    statusBox.style.backgroundColor = "#fef3c7";
+                } else {
+                    statusBox.style.color = "#dc2626"; // Merah
+                    statusBox.style.backgroundColor = "#fee2e2";
+                }
+
+                document.getElementById('resSaran').innerText = data.saran;
+
+                // Render Grafik Chart.js Premium
+                const ctx = document.getElementById('zonaChart').getContext('2d');
+                if(chartInstance) chartInstance.destroy();
+                
+                chartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(data.zona),
+                        datasets: [{
+                            label: 'Jumlah Terdeteksi',
+                            data: Object.values(data.zona),
+                            backgroundColor: 'rgba(20, 184, 166, 0.8)', // Medical Teal
+                            hoverBackgroundColor: 'rgba(14, 165, 233, 0.9)', // Ocean Blue saat di-hover
+                            borderRadius: 6,
+                            borderSkipped: false
+                        }]
+                    },
+                    options: { 
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false } // Sembunyikan legenda agar lebih bersih
+                        },
+                        scales: { 
+                            y: { 
+                                beginAtZero: true, 
+                                ticks: { stepSize: 1, color: '#64748b' },
+                                grid: { color: '#f1f5f9', drawBorder: false }
+                            },
+                            x: {
+                                ticks: { color: '#64748b', font: { family: "'Poppins', sans-serif" } },
+                                grid: { display: false } // Sembunyikan garis vertikal latar belakang
+                            }
+                        } 
+                    }
+                });
+
+                document.getElementById('resultArea').style.display = 'flex';
+                // Scroll halus ke bawah untuk melihat hasil
+                window.scrollTo({ top: document.getElementById('resultArea').offsetTop - 50, behavior: 'smooth' });
+
+            } catch (error) {
+                alert("Terjadi kesalahan saat memproses gambar. Pastikan server Flask menyala.");
+                console.error(error);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
