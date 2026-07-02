@@ -1,0 +1,7 @@
+# Data riwayat testing (generated at runtime, bukan source code)
+data/*.json
+static/history/*
+!static/history/.gitkeep
+
+__pycache__/
+*.pyc

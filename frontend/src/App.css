@@ -136,3 +136,108 @@ body {
     color: var(--text-muted);
     font-size: 0.85rem;
 }
+
+/* === Navigasi halaman (Riwayat Testing, Dashboard Evaluasi) === */
+.app-nav {
+    display: flex;
+    gap: 0.5rem;
+}
+.app-nav-link {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+.app-nav-link:hover {
+    background-color: #f0f9ff;
+    color: var(--primary-color);
+}
+.app-nav-link.active {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+/* === Tab Upload / Camera / Video === */
+.mode-tabs {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+.mode-tab-btn {
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+}
+.mode-tab-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+.mode-tab-btn.active {
+    background: linear-gradient(135deg, var(--primary-color), #0284c7);
+    border-color: transparent;
+    color: #fff;
+}
+
+/* === Camera & Video preview === */
+.camera-preview {
+    border-radius: 15px;
+    overflow: hidden;
+    background-color: #0f172a;
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #fff;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+.camera-preview video,
+.camera-preview img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+.camera-placeholder {
+    color: #94a3b8;
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+/* === Tabel Riwayat Testing === */
+.history-table th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-muted);
+    border-bottom-width: 2px;
+}
+.history-table td {
+    font-size: 0.9rem;
+    vertical-align: middle;
+}
+
+/* === Modal Detail Riwayat === */
+.custom-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    overflow-y: auto;
+    padding: 2rem 1rem;
+    z-index: 1050;
+}
+.custom-modal-content {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+}

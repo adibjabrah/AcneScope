@@ -12,8 +12,12 @@ This project consists of two main components:
 ## Features
 
 * Upload facial images for analysis
+* Camera capture and realtime video detection via browser webcam
 * Automatic acne detection using YOLOv8
 * Bounding box visualization on detected acne areas
+* Automatic Testing History logging (original image, result image, detected classes, confidence, inference time)
+* Manual validation of detection results (correct / partial / incorrect, with false positive/negative counts)
+* Evaluation Dashboard with accuracy statistics and charts (pie, bar, line)
 * Simple and responsive web interface
 * Fast inference through Flask API integration
 
@@ -155,10 +159,8 @@ The acne detection model is trained using YOLOv8 and integrated into the Flask b
 
 ## Future Improvements
 
-* Support for webcam-based detection
-* Detection confidence visualization
 * User authentication system
-* Detection history storage
+* Migrate Testing History storage from JSON file to a relational database
 * Mobile-responsive interface enhancement
 
 ---
